@@ -1,0 +1,70 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+dist/
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+coverage.txt
+coverage.html
+
+# Dependency directories
+vendor/
+
+# Go workspace file
+go.work
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Application specific
+/logagent
+/logserver
+/logcli
+/logui
+
+# Data directories
+/data/
+/logs/
+*.log
+
+# Configuration files with secrets
+*-secret.yaml
+*.pem
+*.key
+*.crt
+
+# Build artifacts
+*.tmp
+*.bak
+
+# OS files
+Thumbs.db
+
+# Local development
+.env
+.env.local
+
+# Buffer and storage
+/var/
+/tmp/
+
+# Node modules (for web UI)
+node_modules/
+web/dist/
+web/build/
+
+# Test cache
+.cache/
