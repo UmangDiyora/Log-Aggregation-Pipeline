@@ -1,0 +1,62 @@
+# LogPipeline Agent Configuration
+
+agent:
+  id: "agent-001"
+  name: "Production Agent"
+  tags:
+    - "production"
+    - "web-server"
+  heartbeat_interval: 30s
+  log_level: "info"
+
+# Input sources
+inputs:
+  # File input
+  - type: file
+    name: "system-logs"
+    enabled: true
+    paths:
+      - "/var/log/*.log"
+      - "/var/log/syslog"
+    exclude:
+      - "*.gz"
+      - "*.zip"
+
+  # Syslog input
+  - type: syslog
+    name: "syslog-udp"
+    enabled: false
+    address: "0.0.0.0:514"
+    protocol: "udp"
+
+  # HTTP input
+  - type: http
+    name: "http-collector"
+    enabled: false
+    listen_address: ":8081"
+    tls: false
+
+# Processing
+processors:
+  - type: add_fields
+    config:
+      environment: "production"
+      datacenter: "us-east-1"
+
+# Output
+output:
+  type: grpc
+  hosts:
+    - "http://localhost:8080"
+  compression: "gzip"
+  batch_size: 1000
+  batch_timeout: 5s
+  max_retries: 3
+  api_key: ""
+
+# Buffer configuration
+buffer:
+  type: "memory"
+  size: "10000"
+  path: "/var/lib/logagent/buffer"
+  flush_interval: 5s

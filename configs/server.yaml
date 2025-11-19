@@ -1,0 +1,62 @@
+# LogPipeline Server Configuration
+
+server:
+  grpc_port: 9090
+  http_port: 8080
+  log_level: "info"
+
+# Storage configuration
+storage:
+  type: "file"
+  path: "/var/lib/logpipeline/data"
+  retention: "30d"
+  compaction_interval: 24h
+
+# Index configuration
+index:
+  type: "memory"
+  path: "/var/lib/logpipeline/index"
+  refresh_interval: 1s
+
+# Processing pipelines
+pipelines:
+  # Default pipeline for JSON logs
+  - name: "json-logs"
+    filter: ""
+    parser: "json"
+    processors:
+      - type: add_fields
+        config:
+          processed: true
+
+  # Pipeline for Nginx logs
+  - name: "nginx-logs"
+    filter: "source:nginx"
+    parser: "nginx"
+    processors:
+      - type: add_fields
+        config:
+          service: "nginx"
+
+# Metrics export
+metrics:
+  enabled: true
+  port: 2112
+  path: "/metrics"
+
+# Alert rules
+alerts:
+  - name: "high-error-rate"
+    query: "level:ERROR"
+    window: "5m"
+    threshold: 100
+    channels:
+      - "slack"
+      - "email"
+
+  - name: "service-down"
+    query: "message:*connection refused*"
+    window: "1m"
+    threshold: 10
+    channels:
+      - "pagerduty"
